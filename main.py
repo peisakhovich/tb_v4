@@ -24,7 +24,7 @@ def db_test():
     try:
         conn = pyodbc.connect(os.getenv("DB_CONN_STR"))
         cursor = conn.cursor()
-        cursor.execute("SELECT count(*) From users")
+        cursor.execute("select  N'Количество записей в таблице Users' + str(count(*)) + N' Сейчас:' + cast(SYSDATETIME() as nvarchar(30))  from users")
 
         result = cursor.fetchone()[0]
         conn.close()
