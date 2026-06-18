@@ -27,9 +27,25 @@ def db_test():
         cursor.execute("select  N'Количество записей в таблице Users' + str(count(*)) + N' Сейчас:' + cast(SYSDATETIME() as nvarchar(30))  from users")
 
         result = cursor.fetchone()[0]
+        
+        cur = conn.cursor()
+
+        cur.execute("""
+                SELECT
+                @@SERVERNAME AS ServerName,
+                DB_NAME() AS DatabaseName,
+                GETDATE() AS CurrentTime
+                """)
+
+        row = cur.fetchone()
+
+
+
         conn.close()
 
-        return {"status": "ok", "result": result}
+        return {"status": "ok", "result": result, "server": row.ServerName,
+        "database": row.DatabaseName,
+        "time": str(row.CurrentTime)}
 
     except Exception as e:
         logger.exception("Database error в БД ошибка")
